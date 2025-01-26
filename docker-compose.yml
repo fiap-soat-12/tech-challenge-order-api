@@ -1,0 +1,17 @@
+services:
+  db:
+    image: 'postgres:latest'
+    container_name: order-tech-challenge-db
+    restart: always
+    hostname: postgres
+    environment:
+      - 'POSTGRES_DB=tc_order_db'
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=secret'
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
