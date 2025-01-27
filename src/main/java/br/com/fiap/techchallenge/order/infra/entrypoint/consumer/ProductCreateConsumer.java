@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.order.infra.entrypoint.consumer;
 
 import br.com.fiap.techchallenge.order.application.usecase.product.CreateProductUseCase;
-import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.dto.AcceptQueue;
+import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.dto.AcceptQueueDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.dto.ProductCreateDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.mapper.ProductMapper;
 import io.awspring.cloud.sqs.annotation.SqsListener;
@@ -29,6 +29,6 @@ public class ProductCreateConsumer {
     public void receiveMessage(ProductCreateDTO productDTO) {
         createProductUseCase.create(mapper.toProduct(productDTO));
 
-        sqsTemplate.send(acceptQueue, new AcceptQueue("Order", true));
+        sqsTemplate.send(acceptQueue, new AcceptQueueDTO("Order", true));
     }
 }
