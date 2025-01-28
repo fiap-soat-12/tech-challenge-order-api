@@ -22,25 +22,19 @@ import java.time.LocalDateTime;
 public class ControllerAdvice extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(AlreadyExistsException.class)
-	public ResponseEntity<?> alreadyExists(RuntimeException ex) {
+	public ResponseEntity<ProblemDTO> alreadyExists(RuntimeException ex) {
 		var error = new ProblemDTO(ex.getMessage(), LocalDateTime.now());
 		return ResponseEntity.badRequest().body(error);
 	}
 
 	@ExceptionHandler(DoesNotExistException.class)
-	public ResponseEntity<?> notFound(RuntimeException ex) {
+	public ResponseEntity<ProblemDTO> notFound(RuntimeException ex) {
 		var error = new ProblemDTO(ex.getMessage(), LocalDateTime.now());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 	}
 
-	@ExceptionHandler(AlreadyInStatusException.class)
-	public ResponseEntity<?> alreadyInStatus(RuntimeException ex) {
-		var error = new ProblemDTO(ex.getMessage(), LocalDateTime.now());
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-	}
-
-	@ExceptionHandler(InvalidStatusUpdateException.class)
-	public ResponseEntity<?> invalidStatusUpdate(RuntimeException ex) {
+	@ExceptionHandler({AlreadyInStatusException.class, InvalidStatusUpdateException.class})
+	public ResponseEntity<ProblemDTO> alreadyInStatus(RuntimeException ex) {
 		var error = new ProblemDTO(ex.getMessage(), LocalDateTime.now());
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
 	}
@@ -53,7 +47,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(DateTimeException.class)
-	public ResponseEntity<?> dateTimeException(DateTimeException ex) {
+	public ResponseEntity<ProblemDTO> dateTimeException(DateTimeException ex) {
 		var error = new ProblemDTO(ex.getMessage(), LocalDateTime.now());
 		return ResponseEntity.badRequest().body(error);
 	}
