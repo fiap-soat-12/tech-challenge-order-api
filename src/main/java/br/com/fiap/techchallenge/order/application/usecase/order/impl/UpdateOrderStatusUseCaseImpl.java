@@ -4,6 +4,8 @@ import br.com.fiap.techchallenge.order.application.exceptions.DoesNotExistExcept
 import br.com.fiap.techchallenge.order.application.persistence.OrderPersistence;
 import br.com.fiap.techchallenge.order.application.usecase.order.UpdateOrderStatusUseCase;
 import br.com.fiap.techchallenge.order.domain.models.Order;
+import br.com.fiap.techchallenge.order.domain.models.OrderDetails;
+import br.com.fiap.techchallenge.order.domain.models.OrderTimestamps;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.cook.CookProducer;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.cook.dto.CookDTO;
@@ -33,7 +35,7 @@ public class UpdateOrderStatusUseCaseImpl implements UpdateOrderStatusUseCase {
 
 		if ("approved".equals(status)) {
 			orderFound.setStatus(OrderStatusEnum.PREPARING);
-			cookProducer.sendToCook(new CookDTO());
+			cookProducer.sendToCook(new CookDTO(orderFound));
 		}
 
 		var isPaid = OrderStatusEnum.PREPARING.equals(orderFound.getStatus()) || orderFound.isPaid();
@@ -56,9 +58,11 @@ public class UpdateOrderStatusUseCaseImpl implements UpdateOrderStatusUseCase {
 		for (Order order : ordersFound) {
 			order.setStatus(OrderStatusEnum.FINISHED);
 
-			var updatedOrder = new Order(order.getId(), order.getAmount(), order.getSequence(), order.getStatus(),
-					order.isPaid(), order.getProducts(), order.getCustomer(), order.getPaymentId(), order.getQr(),
-					order.getCreatedAt(), order.getUpdatedAt());
+			var details = new OrderDetails(order.getSequence(), order.getStatus(),
+					order.isPaid(), order.getProducts(), order.getCustomer(), order.getPaymentId(), order.getQr());
+
+			var updatedOrder = new Order(order.getId(), order.getAmount(), details,
+					new OrderTimestamps(order.getCreatedAt(), order.getUpdatedAt()));
 
 			persistence.update(updatedOrder);
 		}
