@@ -122,13 +122,12 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
 	}
 
 	private PaymentDTO createPayment(CreateOrderDTO input, BigDecimal totalAmount, UUID externalPaymentId) {
-		List<UUID> ids = input.products().stream().map(CreateOrderDTO.OrderProducts::id).collect(Collectors.toList());
+		List<UUID> ids = input.products().stream().map(CreateOrderDTO.OrderProducts::id).toList();
 		List<Product> products = this.findProductListOrThrowException(ids);
 
 		return new PaymentDTO(products.stream()
 			.map(product -> new PaymentItemDTO(product.getCategory().toString(), product.getName(),
-					product.getDescription(), product.getPrice()))
-			.collect(Collectors.toList()), totalAmount, externalPaymentId);
+					product.getDescription(), product.getPrice())).toList(), totalAmount, externalPaymentId);
 	}
 
 }

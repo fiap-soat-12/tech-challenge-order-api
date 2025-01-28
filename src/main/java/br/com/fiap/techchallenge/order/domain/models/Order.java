@@ -33,20 +33,18 @@ public class Order {
 
 	private LocalDateTime updatedAt;
 
-	public Order(UUID id, BigDecimal amount, Integer sequence, OrderStatusEnum status, boolean isPaid,
-			List<OrderProduct> products, Customer customer, String paymentId, String qr, LocalDateTime createdAt,
-			LocalDateTime updatedAt) {
+	public Order(UUID id, BigDecimal amount, OrderDetails details, OrderTimestamps timestamps){
 		this.id = id;
 		this.amount = amount;
-		this.sequence = sequence;
-		this.status = status;
-		this.isPaid = isPaid;
-		this.products = products;
-		this.customer = customer;
-		this.paymentId = paymentId;
-		this.qr = qr;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+		this.sequence = details.getSequence();
+		this.status = details.getStatus();
+		this.isPaid = details.isPaid();
+		this.products = details.getProducts();
+		this.customer = details.getCustomer();
+		this.paymentId = details.getPaymentId();
+		this.qr = details.getQr();
+		this.createdAt = timestamps.getCreatedAt();
+		this.updatedAt = timestamps.getUpdatedAt();
 	}
 
 	public Order(BigDecimal amount, List<OrderProduct> products, Customer customer, String paymentId){
@@ -59,9 +57,17 @@ public class Order {
 	}
 
 	public Order(Order orderFound, boolean isPaid) {
-		 this(orderFound.getId(), orderFound.getAmount(), orderFound.getSequence(),
-				orderFound.getStatus(), isPaid, orderFound.getProducts(), orderFound.getCustomer(),
-				orderFound.getPaymentId(), orderFound.getQr(), orderFound.getCreatedAt(), orderFound.getUpdatedAt());
+		this.id = orderFound.getId();
+		this.amount = orderFound.getAmount();
+		this.sequence = orderFound.getSequence();
+		this.status = orderFound.getStatus();
+		this.isPaid = isPaid;
+		this.products = orderFound.getProducts();
+		this.customer = orderFound.getCustomer();
+		this.paymentId = orderFound.getPaymentId();
+		this.qr = orderFound.getQr();
+		this.createdAt = orderFound.getCreatedAt();
+		this.updatedAt = orderFound.getUpdatedAt();
 	}
 
 	public UUID getId() {

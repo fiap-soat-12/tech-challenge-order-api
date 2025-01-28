@@ -2,7 +2,9 @@ package br.com.fiap.techchallenge.order.infra.gateway.database.entities;
 
 
 import br.com.fiap.techchallenge.order.domain.models.Order;
+import br.com.fiap.techchallenge.order.domain.models.OrderDetails;
 import br.com.fiap.techchallenge.order.domain.models.OrderProduct;
+import br.com.fiap.techchallenge.order.domain.models.OrderTimestamps;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -80,8 +82,10 @@ public class OrderEntity {
 			.map(orderProductEntity -> orderProductEntity.toOrderProduct(id))
 			.toList();
 
-		return new Order(id, amount, sequence, status, isPaid, orderProducts,
-				customer != null ? customer.toCustomer() : null, paymentId, qr, createdAt, updatedAt);
+		var details = new OrderDetails(sequence, status, isPaid, orderProducts,
+				customer != null ? customer.toCustomer() : null, paymentId, qr);
+
+		return new Order(id, amount, details, new OrderTimestamps(createdAt, updatedAt));
 	}
 
 	public UUID getId() {

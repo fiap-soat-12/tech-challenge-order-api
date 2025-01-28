@@ -55,4 +55,12 @@ public class OrderProduct {
 		return this.productName;
 	}
 
+	public UUID getOrderId() {
+		return orderId;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
 }
