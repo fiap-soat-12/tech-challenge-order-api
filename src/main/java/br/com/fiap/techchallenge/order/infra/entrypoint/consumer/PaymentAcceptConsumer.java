@@ -22,7 +22,6 @@ public class PaymentAcceptConsumer {
     @SqsListener("${sqs.queue.order.payment.listener}")
     public void receiveMessage(PaymentAcceptDTO dto){
         var orderId = dto.orderId();
-        var qrCode = dto.qrCode();
 
         CompletableFuture<PaymentAcceptDTO> future = responseMap.remove(orderId);
         if (future != null) {
