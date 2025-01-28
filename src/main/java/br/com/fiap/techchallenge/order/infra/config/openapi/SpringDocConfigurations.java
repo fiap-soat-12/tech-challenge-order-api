@@ -1,7 +1,9 @@
 package br.com.fiap.techchallenge.order.infra.config.openapi;
 
-
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.CustomerResponseDTO;
+import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.PageResponseDTO;
+import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.ProductPageResponseDTO;
+import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.ProductResponseDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.handler.ProblemDTO;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
@@ -50,6 +52,9 @@ public class SpringDocConfigurations {
 
 		Map<String, Schema> problemSchema = ModelConverters.getInstance().read(ProblemDTO.class);
 		Map<String, Schema> customerResponseDto = ModelConverters.getInstance().read(CustomerResponseDTO.class);
+		Map<String, Schema> productPageResponseDto = ModelConverters.getInstance().read(ProductPageResponseDTO.class);
+		Map<String, Schema> productResponseDto = ModelConverters.getInstance().read(ProductResponseDTO.class);
+		Map<String, Schema> pageResponseDto = ModelConverters.getInstance().read(PageResponseDTO.class);
 
 
 		Schema errorsValidateDataArraySchema = new ArraySchema()
@@ -57,6 +62,9 @@ public class SpringDocConfigurations {
 
 		schemaMap.putAll(problemSchema);
 		schemaMap.putAll(customerResponseDto);
+		schemaMap.putAll(productPageResponseDto);
+		schemaMap.putAll(productResponseDto);
+		schemaMap.putAll(pageResponseDto);
 		schemaMap.put("ErrorsValidateDataList", errorsValidateDataArraySchema);
 
 		return schemaMap;
