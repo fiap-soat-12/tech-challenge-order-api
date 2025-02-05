@@ -1,6 +1,5 @@
 package br.com.fiap.techchallenge.order.infra.gateway.database.entities;
 
-
 import br.com.fiap.techchallenge.order.domain.models.Order;
 import br.com.fiap.techchallenge.order.domain.models.OrderDetails;
 import br.com.fiap.techchallenge.order.domain.models.OrderProduct;
@@ -37,11 +36,7 @@ public class OrderEntity {
 	@Column(nullable = false)
 	private boolean isPaid;
 
-	@Column(nullable = false)
 	private String paymentId;
-
-	@Column(nullable = false)
-	private String qr;
 
 	@CreationTimestamp
 	private LocalDateTime createdAt;
@@ -53,7 +48,7 @@ public class OrderEntity {
 	@JoinColumn(name = "customer_id", referencedColumnName = "id")
 	private CustomerEntity customer;
 
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<OrderProductEntity> products = new ArrayList<>();
 
 	public OrderEntity() {
@@ -64,10 +59,9 @@ public class OrderEntity {
 		this.amount = order.getAmount();
 		this.sequence = order.getSequence();
 		this.status = order.getStatus();
-		this.isPaid = order.isPaid();
+		this.isPaid = order.getIsPaid();
 		this.customer = order.getCustomer() != null ? new CustomerEntity(order.getCustomer()) : null;
 		this.paymentId = order.getPaymentId();
-		this.qr = order.getQr();
 		this.createdAt = order.getCreatedAt();
 		this.updatedAt = order.getUpdatedAt();
 	}
@@ -83,7 +77,7 @@ public class OrderEntity {
 			.toList();
 
 		var details = new OrderDetails(sequence, status, isPaid, orderProducts,
-				customer != null ? customer.toCustomer() : null, paymentId, qr);
+				customer != null ? customer.toCustomer() : null, paymentId);
 
 		return new Order(id, amount, details, new OrderTimestamps(createdAt, updatedAt));
 	}

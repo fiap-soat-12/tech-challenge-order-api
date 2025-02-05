@@ -16,6 +16,6 @@ public class OrderEvolveConsumer {
 
     @SqsListener("${sqs.queue.order.evolve.listener}")
     public void receiveMessage(OrderEvolveDTO dto){
-        evolveOrderUseCase.evolveOrder(dto.orderId());
+        evolveOrderUseCase.evolveOrder(dto);
     }
 }

@@ -1,6 +1,5 @@
 package br.com.fiap.techchallenge.order.application.usecase.customer.impl;
 
-
 import br.com.fiap.techchallenge.order.application.exceptions.AlreadyExistsException;
 import br.com.fiap.techchallenge.order.application.persistence.CustomerPersistence;
 import br.com.fiap.techchallenge.order.application.usecase.customer.CreateCustomerUseCase;
@@ -21,8 +20,6 @@ public class CreateCustomerUseCaseImpl implements CreateCustomerUseCase {
 		if (customerFound.isPresent()) {
 			throw new AlreadyExistsException("Customer Already Exists");
 		}
-
 		return persistence.create(customer);
 	}
-
 }

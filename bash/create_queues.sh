@@ -6,15 +6,10 @@ ENDPOINT="http://localhost:4566"
 # Define as filas a serem criadas
 QUEUES=(
   "order-product-create-queue"
-  "order-product-create-accept-queue"
   "order-product-delete-queue"
-  "order-product-delete-accept-queue"
   "order-product-update-queue"
-  "order-product-update-accept-queue"
-  "payment-order-create-queue"
-  "payment-order-create-accept-queue"
   "order-status-update-queue"
-  "order-order-evolve-queue"
+  "payment-order-create-queue"
   "cook-order-create-queue"
 )
 

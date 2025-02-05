@@ -44,7 +44,6 @@ public class ProductPersistenceImpl implements ProductPersistence {
 
 	@Override
 	public void update(Product product) {
-		var productEntity = new ProductEntity().update(product);
-		repository.save(productEntity);
+		repository.save(new ProductEntity(product));
 	}
 }

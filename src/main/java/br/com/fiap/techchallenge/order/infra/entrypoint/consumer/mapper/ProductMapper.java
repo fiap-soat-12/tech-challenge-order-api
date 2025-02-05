@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ProductMapper {
 
 	public Product toProduct(ProductCreateDTO dto) {
-		return new Product(dto.name(), dto.category(), dto.price(), dto.description());
+		return new Product(dto.id(), dto.name(), dto.category(), dto.price(), dto.description());
 	}
 
 	public Product toProduct(ProductUpdateDTO dto) {
