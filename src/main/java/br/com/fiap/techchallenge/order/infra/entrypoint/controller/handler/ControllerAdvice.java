@@ -1,14 +1,11 @@
 package br.com.fiap.techchallenge.order.infra.entrypoint.controller.handler;
 
 import br.com.fiap.techchallenge.order.application.exceptions.AlreadyExistsException;
-import br.com.fiap.techchallenge.order.application.exceptions.AlreadyInStatusException;
 import br.com.fiap.techchallenge.order.application.exceptions.DoesNotExistException;
-import br.com.fiap.techchallenge.order.application.exceptions.InvalidStatusUpdateException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,12 +30,6 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 	}
 
-	@ExceptionHandler({AlreadyInStatusException.class, InvalidStatusUpdateException.class})
-	public ResponseEntity<ProblemDTO> alreadyInStatus(RuntimeException ex) {
-		var error = new ProblemDTO(ex.getMessage(), LocalDateTime.now());
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-	}
-
 	@Override
 	public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
 			HttpStatusCode status, WebRequest request) {
@@ -48,13 +39,6 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(DateTimeException.class)
 	public ResponseEntity<ProblemDTO> dateTimeException(DateTimeException ex) {
-		var error = new ProblemDTO(ex.getMessage(), LocalDateTime.now());
-		return ResponseEntity.badRequest().body(error);
-	}
-
-	@Override
-	public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
-			HttpStatusCode status, WebRequest request) {
 		var error = new ProblemDTO(ex.getMessage(), LocalDateTime.now());
 		return ResponseEntity.badRequest().body(error);
 	}

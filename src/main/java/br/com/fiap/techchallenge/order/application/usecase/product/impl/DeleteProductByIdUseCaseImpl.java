@@ -16,14 +16,11 @@ public class DeleteProductByIdUseCaseImpl implements DeleteProductByIdUseCase {
 
 	@Override
 	public void delete(UUID id) {
-		var productOpt = persistence.findById(id);
+		var product = persistence.findById(id)
+				.orElseThrow(() -> new DoesNotExistException("Product Doesn't Exist"));
 
-		if (productOpt.isEmpty()) {
-			throw new DoesNotExistException("Product not found");
-		}
-
-		var product = productOpt.get();
 		product.setStatus(ProductStatusEnum.INACTIVE);
+
 		persistence.update(product);
 	}
 }

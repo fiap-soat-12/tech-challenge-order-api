@@ -15,7 +15,9 @@ public class EvolveOrderUseCaseConfig {
 
 	@Bean
 	public EvolveOrderUseCaseImpl evolveOrderUseCase(OrderPersistence orderPersistence,
-													 EvolveToFinished evolveToFinished, UpdateOrderStatusUseCase updateOrderStatusUseCase, EvolveToReady evolveToReady) {
+													 EvolveToFinished evolveToFinished,
+													 UpdateOrderStatusUseCase updateOrderStatusUseCase,
+													 EvolveToReady evolveToReady) {
 		return new EvolveOrderUseCaseImpl(orderPersistence, updateOrderStatusUseCase, List.of(evolveToFinished, evolveToReady));
 	}
 }
