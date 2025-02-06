@@ -7,6 +7,7 @@ import br.com.fiap.techchallenge.order.domain.models.pageable.CustomPageable;
 import br.com.fiap.techchallenge.order.infra.gateway.database.entities.ProductEntity;
 import br.com.fiap.techchallenge.order.infra.gateway.database.mapper.PageMapper;
 import br.com.fiap.techchallenge.order.infra.gateway.database.repository.ProductRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,7 @@ public class ProductPersistenceImpl implements ProductPersistence {
 
 	@Override
 	public CustomPageable<Product> findByCategory(ProductCategoryEnum category, Integer page, Integer size) {
-		var products = repository.findByCategory(category, PageRequest.of(page, size)).map(ProductEntity::toProduct);
+		Page<Product> products = repository.findByCategory(category, PageRequest.of(page, size)).map(ProductEntity::toProduct);
 		return mapper.toDomainPage(products);
 	}
 
