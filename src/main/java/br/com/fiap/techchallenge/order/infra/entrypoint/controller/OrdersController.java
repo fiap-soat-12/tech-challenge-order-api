@@ -30,7 +30,7 @@ public class OrdersController implements OrderControllerOpenApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<CreateOrderResponseDTO> create(CreateOrderRequestDTO orderRequest){
+    public ResponseEntity<CreateOrderResponseDTO> create(@RequestBody CreateOrderRequestDTO orderRequest){
         var order = createOrderUseCase.create(mapper.toCreateOrder(orderRequest));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new CreateOrderResponseDTO(order));

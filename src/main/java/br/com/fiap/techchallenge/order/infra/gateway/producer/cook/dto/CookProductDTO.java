@@ -5,9 +5,8 @@ import br.com.fiap.techchallenge.order.domain.models.OrderProduct;
 import java.util.UUID;
 
 public record CookProductDTO(UUID id,
-                             String productName,
                              String customization) {
     public CookProductDTO(OrderProduct orderProduct) {
-        this(orderProduct.getId(), orderProduct.getProductName(), orderProduct.getCustomization());
+        this(orderProduct.getId(), orderProduct.getCustomization());
     }
 }

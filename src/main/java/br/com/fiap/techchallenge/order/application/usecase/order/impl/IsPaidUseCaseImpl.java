@@ -17,7 +17,7 @@ public class IsPaidUseCaseImpl implements IsPaidUseCase {
 	@Override
 	public Boolean isOrderPaid(UUID id) {
 		var orderFound = persistence.findById(id).orElseThrow(() -> new DoesNotExistException("Order does not exist!"));
-		return orderFound.isPaid();
+		return orderFound.getIsPaid();
 	}
 
 }

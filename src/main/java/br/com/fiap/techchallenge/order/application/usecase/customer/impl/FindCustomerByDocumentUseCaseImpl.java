@@ -20,8 +20,6 @@ public class FindCustomerByDocumentUseCaseImpl implements FindCustomerByDocument
 		if (customerFound.isEmpty()) {
 			throw new DoesNotExistException("Customer Doesn't Exist");
 		}
-
 		return customerFound.get();
 	}
-
 }

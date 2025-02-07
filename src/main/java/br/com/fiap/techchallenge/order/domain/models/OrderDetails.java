@@ -12,17 +12,15 @@ public class OrderDetails {
     private final List<OrderProduct> products;
     private final Customer customer;
     private final String paymentId;
-    private final String qr;
 
     public OrderDetails(Integer sequence, OrderStatusEnum status, boolean isPaid,
-                        List<OrderProduct> products, Customer customer, String paymentId, String qr) {
+                        List<OrderProduct> products, Customer customer, String paymentId) {
         this.sequence = sequence;
         this.status = status;
         this.isPaid = isPaid;
         this.products = products;
         this.customer = customer;
         this.paymentId = paymentId;
-        this.qr = qr;
     }
 
     public Integer getSequence() {
@@ -47,9 +45,5 @@ public class OrderDetails {
 
     public String getPaymentId() {
         return paymentId;
-    }
-
-    public String getQr() {
-        return qr;
     }
 }

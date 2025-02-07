@@ -18,7 +18,6 @@ import java.util.UUID;
 public class ProductEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private UUID id;
 
 	private String name;
@@ -48,21 +47,11 @@ public class ProductEntity {
 		this.category = product.getCategory();
 		this.price = product.getPrice();
 		this.description = product.getDescription();
+		this.status = product.getStatus();
 	}
 
 	public Product toProduct() {
 		return new Product(id, name, category, price, description, status, createdAt);
-	}
-
-	public ProductEntity update(Product product) {
-		this.id = product.getId();
-		this.name = product.getName();
-		this.category = product.getCategory();
-		this.price = product.getPrice();
-		this.description = product.getDescription();
-		this.status = product.getStatus();
-		this.createdAt = product.getCreatedAt();
-		return this;
 	}
 
 	public UUID getId() {

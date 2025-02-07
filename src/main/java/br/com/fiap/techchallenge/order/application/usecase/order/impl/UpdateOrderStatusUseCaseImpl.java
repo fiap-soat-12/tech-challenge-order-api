@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Transactional
 public class UpdateOrderStatusUseCaseImpl implements UpdateOrderStatusUseCase {
@@ -29,25 +30,26 @@ public class UpdateOrderStatusUseCaseImpl implements UpdateOrderStatusUseCase {
     }
 
 	@Override
-	public void updateStatusByPaymentDataId(String paymentDataId, String status) {
-		var orderFound = persistence.findByPaymentId(paymentDataId)
+	public void evolveToPreparing(UUID orderId, Boolean isPaid) {
+		var found = persistence.findById(orderId)
 			.orElseThrow(() -> new DoesNotExistException("Order does no exist!"));
 
-		if ("approved".equals(status)) {
-			orderFound.setStatus(OrderStatusEnum.PREPARING);
-			cookProducer.sendToCook(new CookDTO(orderFound));
+		if (Boolean.TRUE.equals(isPaid)) {
+			this.sendToCook(found, isPaid);
+		} else {
+			found.cancelOrder(isPaid);
 		}
 
-		var isPaid = OrderStatusEnum.PREPARING.equals(orderFound.getStatus()) || orderFound.isPaid();
+		persistence.update(found);
+	}
 
-		var updatedOrder = new Order(orderFound, isPaid);
-
-		persistence.update(updatedOrder);
+	private void sendToCook(Order order, Boolean isPaid){
+		order.prepareOrder(isPaid);
+		cookProducer.sendToCook(new CookDTO(order));
 	}
 
 	@Scheduled(fixedRate = 600000)
 	@Transactional
-	@Override
 	public void updateOrderStatus() {
 		LocalDateTime thirtyMinutesAgo = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"))
 			.minusMinutes(30)
@@ -56,10 +58,10 @@ public class UpdateOrderStatusUseCaseImpl implements UpdateOrderStatusUseCase {
 				thirtyMinutesAgo);
 
 		for (Order order : ordersFound) {
-			order.setStatus(OrderStatusEnum.FINISHED);
+			order.setStatusFinished();
 
 			var details = new OrderDetails(order.getSequence(), order.getStatus(),
-					order.isPaid(), order.getProducts(), order.getCustomer(), order.getPaymentId(), order.getQr());
+					order.getIsPaid(), order.getProducts(), order.getCustomer(), order.getPaymentId());
 
 			var updatedOrder = new Order(order.getId(), order.getAmount(), details,
 					new OrderTimestamps(order.getCreatedAt(), order.getUpdatedAt()));
@@ -67,5 +69,4 @@ public class UpdateOrderStatusUseCaseImpl implements UpdateOrderStatusUseCase {
 			persistence.update(updatedOrder);
 		}
 	}
-
 }

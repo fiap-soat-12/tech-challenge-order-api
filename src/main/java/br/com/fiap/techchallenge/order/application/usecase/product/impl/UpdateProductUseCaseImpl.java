@@ -15,14 +15,11 @@ public class UpdateProductUseCaseImpl implements UpdateProductUseCase {
 
 	@Override
 	public void update(Product product) {
-		var productFound = persistence.findById(product.getId());
+		var productFound = persistence.findById(product.getId())
+				.orElseThrow(() -> new DoesNotExistException("Product Doesn't Exist"));
 
-		if (productFound.isEmpty()) {
-			throw new DoesNotExistException("Product Doesn't Exist");
-		}
+		productFound.update(product);
 
-		var productUpdated = productFound.get().update(product);
-
-		persistence.update(productUpdated);
+		persistence.update(productFound);
 	}
 }

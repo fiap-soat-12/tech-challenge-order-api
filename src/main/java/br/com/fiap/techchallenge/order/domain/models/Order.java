@@ -1,8 +1,6 @@
 package br.com.fiap.techchallenge.order.domain.models;
 
-
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,11 +17,9 @@ public class Order {
 
 	private OrderStatusEnum status;
 
-	private final boolean isPaid;
+	private Boolean isPaid;
 
 	private final String paymentId;
-
-	private String qr;
 
 	private List<OrderProduct> products;
 
@@ -42,7 +38,6 @@ public class Order {
 		this.products = details.getProducts();
 		this.customer = details.getCustomer();
 		this.paymentId = details.getPaymentId();
-		this.qr = details.getQr();
 		this.createdAt = timestamps.getCreatedAt();
 		this.updatedAt = timestamps.getUpdatedAt();
 	}
@@ -54,20 +49,6 @@ public class Order {
 		this.products = products;
 		this.customer = customer;
 		this.paymentId = paymentId;
-	}
-
-	public Order(Order orderFound, boolean isPaid) {
-		this.id = orderFound.getId();
-		this.amount = orderFound.getAmount();
-		this.sequence = orderFound.getSequence();
-		this.status = orderFound.getStatus();
-		this.isPaid = isPaid;
-		this.products = orderFound.getProducts();
-		this.customer = orderFound.getCustomer();
-		this.paymentId = orderFound.getPaymentId();
-		this.qr = orderFound.getQr();
-		this.createdAt = orderFound.getCreatedAt();
-		this.updatedAt = orderFound.getUpdatedAt();
 	}
 
 	public UUID getId() {
@@ -86,7 +67,11 @@ public class Order {
 		return status;
 	}
 
-	public boolean isPaid() {
+	public void setPaid(Boolean isPaid) {
+		this.isPaid = isPaid;
+	}
+
+	public Boolean getIsPaid(){
 		return isPaid;
 	}
 
@@ -114,14 +99,6 @@ public class Order {
 		this.products = new ArrayList<>();
 	}
 
-	public String getQr() {
-		return qr;
-	}
-
-	public void setQrCode(String qrCode) {
-		this.qr = qrCode;
-	}
-
 	public void setStatus(OrderStatusEnum status) {
 		this.status = status;
 	}
@@ -132,5 +109,15 @@ public class Order {
 
 	public void setStatusFinished() {
 		this.status = OrderStatusEnum.FINISHED;
+	}
+
+	public void prepareOrder(Boolean isPaid) {
+		this.status = OrderStatusEnum.PREPARING;
+		this.isPaid = isPaid;
+	}
+
+	public void cancelOrder(Boolean isPaid) {
+		this.status = OrderStatusEnum.FINISHED;
+		this.isPaid = isPaid;
 	}
 }

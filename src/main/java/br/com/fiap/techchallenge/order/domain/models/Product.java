@@ -1,12 +1,11 @@
 package br.com.fiap.techchallenge.order.domain.models;
 
-
-
 import br.com.fiap.techchallenge.order.domain.models.enums.ProductCategoryEnum;
 import br.com.fiap.techchallenge.order.domain.models.enums.ProductStatusEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 public class Product {
@@ -39,27 +38,20 @@ public class Product {
 		this.createdAt = createdAt;
 	}
 
-	public Product(String name, ProductCategoryEnum category, BigDecimal price, String description) {
-		this.name = name;
-		this.category = category;
-		this.price = price;
-		this.description = description;
-	}
-
 	public Product(UUID id, String name, ProductCategoryEnum category, BigDecimal price, String description) {
 		this.id = id;
 		this.name = name;
 		this.category = category;
 		this.price = price;
 		this.description = description;
+		this.status = ProductStatusEnum.ACTIVE;
 	}
 
-	public Product update(Product product) {
-		this.name = product.getName();
-		this.category = product.getCategory();
-		this.price = product.getPrice();
-		this.description = product.getDescription();
-		return this;
+	public void update(Product product) {
+		this.name = Optional.ofNullable(product).map(Product::getName).orElse(this.name);
+		this.category = Optional.ofNullable(product).map(Product::getCategory).orElse(this.category);
+		this.price = Optional.ofNullable(product).map(Product::getPrice).orElse(this.price);
+		this.description = Optional.ofNullable(product).map(Product::getDescription).orElse(this.description);
 	}
 
 	public UUID getId() {
