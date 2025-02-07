@@ -13,7 +13,8 @@ public class CreateOrderUseCaseConfig {
 
 	@Bean
 	public CreateOrderUseCaseImpl createOrderUseCaseImpl(OrderPersistence persistence,
-														 ProductPersistence productPersistence, CustomerPersistence customerPersistence,
+														 ProductPersistence productPersistence,
+														 CustomerPersistence customerPersistence,
 														 PaymentProducer paymentProducer) {
 		return new CreateOrderUseCaseImpl(persistence, productPersistence, customerPersistence, paymentProducer);
 	}

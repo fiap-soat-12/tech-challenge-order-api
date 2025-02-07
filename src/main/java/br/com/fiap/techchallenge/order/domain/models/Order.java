@@ -3,7 +3,6 @@ package br.com.fiap.techchallenge.order.domain.models;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,10 +66,6 @@ public class Order {
 		return status;
 	}
 
-	public void setPaid(Boolean isPaid) {
-		this.isPaid = isPaid;
-	}
-
 	public Boolean getIsPaid(){
 		return isPaid;
 	}
@@ -93,10 +88,6 @@ public class Order {
 
 	public String getPaymentId() {
 		return paymentId;
-	}
-
-	public void removeProducts() {
-		this.products = new ArrayList<>();
 	}
 
 	public void setStatus(OrderStatusEnum status) {

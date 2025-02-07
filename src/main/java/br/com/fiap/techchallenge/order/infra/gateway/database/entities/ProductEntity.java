@@ -61,28 +61,4 @@ public class ProductEntity {
 	public String getName() {
 		return name;
 	}
-
-	public ProductCategoryEnum getCategory() {
-		return category;
-	}
-
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public ProductStatusEnum getStatus() {
-		return status;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setStatus(ProductStatusEnum status) {
-		this.status = status;
-	}
 }

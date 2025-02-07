@@ -1,5 +1,6 @@
 package br.com.fiap.techchallenge.order.infra.config.queue;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
@@ -11,10 +12,13 @@ import java.net.URI;
 @Configuration
 public class SqsConfig {
 
+    @Value("${sqs.queue.url}")
+    private String urlSqs;
+
     @Bean
     public SqsAsyncClient sqsAsyncClient() {
         return SqsAsyncClient.builder()
-                .endpointOverride(URI.create("http://localhost:4566"))
+                .endpointOverride(URI.create(urlSqs))
                 .region(Region.US_EAST_1)
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();

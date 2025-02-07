@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<sonar.exclusions> **/SqsConfig.java, **/OrderApplication.java, **/SpringDocConfigurations.java, **/NullOrValidUUIDValidator.java, **/ErrorsValidateData.java</sonar.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -92,6 +93,35 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<!-- attached to Maven test phase -->
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>br/com/fiap/techchallenge/order/OrderApplication.class</exclude>
+								<exclude>br/com/fiap/techchallenge/order/infra/entrypoint/controller/handler/ErrorsValidateData.class</exclude>
+								<exclude>br/com/fiap/techchallenge/order/infra/entrypoint/controller/validator/NullOrValidUUIDValidator.class</exclude>
+								<exclude>br/com/fiap/techchallenge/order/infra/config/openapi/SpringDocConfigurations.class</exclude>
+								<exclude>br/com/fiap/techchallenge/order/infra/config/queue/SqsConfig.class</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

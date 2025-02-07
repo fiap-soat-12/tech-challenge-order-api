@@ -22,10 +22,7 @@ public class Product {
 
 	private ProductStatusEnum status;
 
-	private LocalDateTime createdAt;
-
-	public Product() {
-	}
+	private final LocalDateTime createdAt;
 
 	public Product(UUID id, String name, ProductCategoryEnum category, BigDecimal price, String description,
                    ProductStatusEnum status, LocalDateTime createdAt) {
@@ -39,12 +36,7 @@ public class Product {
 	}
 
 	public Product(UUID id, String name, ProductCategoryEnum category, BigDecimal price, String description) {
-		this.id = id;
-		this.name = name;
-		this.category = category;
-		this.price = price;
-		this.description = description;
-		this.status = ProductStatusEnum.ACTIVE;
+		this(id, name, category, price, description, ProductStatusEnum.ACTIVE, null);
 	}
 
 	public void update(Product product) {

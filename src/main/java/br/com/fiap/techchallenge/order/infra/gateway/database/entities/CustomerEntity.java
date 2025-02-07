@@ -31,13 +31,6 @@ public class CustomerEntity {
 	public CustomerEntity() {
 	}
 
-	public CustomerEntity(UUID id, String name, String document, String email) {
-		this.id = id;
-		this.name = name;
-		this.document = document;
-		this.email = email;
-	}
-
 	public CustomerEntity(Customer customer) {
 		this.id = customer.getId();
 		this.name = customer.getName();
@@ -47,22 +40,6 @@ public class CustomerEntity {
 
 	public Customer toCustomer() {
 		return new Customer(id, name, document, email);
-	}
-
-	public UUID getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDocument() {
-		return document;
-	}
-
-	public String getEmail() {
-		return email;
 	}
 
 }
