@@ -15,6 +15,7 @@ import br.com.fiap.techchallenge.order.domain.models.enums.ProductCategoryEnum;
 import br.com.fiap.techchallenge.order.domain.models.enums.ProductStatusEnum;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.payment.PaymentProducer;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.payment.dto.PaymentDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ class CreateOrderUseCaseImplTest {
 
     @Test
     @DisplayName("Should Create Order Successfully")
-    void shouldCreateOrderSuccessfully() {
+    void shouldCreateOrderSuccessfully() throws JsonProcessingException {
         when(customerPersistence.findById(customerId)).thenReturn(Optional.of(customer));
 
         when(productPersistence.findById(any(UUID.class))).thenAnswer(invocation -> {
@@ -81,7 +82,7 @@ class CreateOrderUseCaseImplTest {
 
     @Test
     @DisplayName("Should Create Order Successfully Without Customer")
-    void shouldCreateOrderSuccessfullyWithoutCustomer() {
+    void shouldCreateOrderSuccessfullyWithoutCustomer() throws JsonProcessingException {
 
         when(productPersistence.findById(any(UUID.class))).thenAnswer(invocation -> {
             UUID requestedId = invocation.getArgument(0);

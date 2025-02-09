@@ -6,6 +6,7 @@ import br.com.fiap.techchallenge.order.application.usecase.order.impl.evolve.Evo
 import br.com.fiap.techchallenge.order.domain.models.Order;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.dto.OrderEvolveDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ class EvolveOrderUseCaseImplTest {
 
     @Test
     @DisplayName("Should Evolve To Preparing When Order Is Received And Paid")
-    void shouldEvolveToPreparingWhenOrderIsReceivedAndPaid() {
+    void shouldEvolveToPreparingWhenOrderIsReceivedAndPaid() throws JsonProcessingException {
         var orderId = UUID.randomUUID();
         var orderEvolveDTO = new OrderEvolveDTO(orderId, true);
         var order = mock(Order.class);
@@ -62,7 +63,7 @@ class EvolveOrderUseCaseImplTest {
 
     @Test
     @DisplayName("Should Apply EvolveRules And Update Order When Order Is Not Received")
-    void shouldApplyEvolveRulesAndUpdateOrderWhenOrderIsNotReceived() {
+    void shouldApplyEvolveRulesAndUpdateOrderWhenOrderIsNotReceived() throws JsonProcessingException {
         var orderId = UUID.randomUUID();
         var orderEvolveDTO = new OrderEvolveDTO(orderId, false);
         var order = mock(Order.class);

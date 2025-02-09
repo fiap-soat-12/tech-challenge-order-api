@@ -6,6 +6,7 @@ import br.com.fiap.techchallenge.order.application.usecase.order.UpdateOrderStat
 import br.com.fiap.techchallenge.order.application.usecase.order.impl.evolve.EvolveRules;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.dto.OrderEvolveDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class EvolveOrderUseCaseImpl implements EvolveOrderUseCase {
 	}
 
 	@Override
-	public void evolveOrder(OrderEvolveDTO orderEvolve) {
+	public void evolveOrder(OrderEvolveDTO orderEvolve) throws JsonProcessingException {
 		var order = persistence.findById(orderEvolve.orderId()).orElseThrow();
 
 		if(OrderStatusEnum.RECEIVED.equals(order.getStatus())){

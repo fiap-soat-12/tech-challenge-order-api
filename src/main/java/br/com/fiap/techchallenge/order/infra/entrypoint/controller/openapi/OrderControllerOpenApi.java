@@ -2,7 +2,9 @@ package br.com.fiap.techchallenge.order.infra.entrypoint.controller.openapi;
 
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.CreateOrderRequestDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.CreateOrderResponseDTO;
+import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.PaidRequestDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.handler.ErrorsValidateData;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,7 +27,7 @@ public interface OrderControllerOpenApi {
 					array = @ArraySchema(schema = @Schema(implementation = ErrorsValidateData.class))))
 	@ApiResponse(responseCode = "500", description = "Internal Server Error Response",
 			content = @Content(mediaType = "application/json", schema = @Schema(ref = "ProblemDto")))
-	ResponseEntity<CreateOrderResponseDTO> create(CreateOrderRequestDTO orderRequest);
+	ResponseEntity<CreateOrderResponseDTO> create(CreateOrderRequestDTO orderRequest) throws JsonProcessingException;
 
 	@Operation(summary = "Get the status of an order by its ID")
 	@ApiResponse(responseCode = "200", description = "OK Response",
@@ -35,6 +37,12 @@ public interface OrderControllerOpenApi {
 	@ApiResponse(responseCode = "500", description = "Internal Server Error Response",
 			content = @Content(mediaType = "application/json", schema = @Schema(ref = "ProblemDto")))
 	ResponseEntity<Boolean> isOrderPaid(UUID id);
+
+	@Operation(summary = "Evolve Order to Paid or Not Paid")
+	@ApiResponse(responseCode = "200", description = "OK Response")
+	@ApiResponse(responseCode = "500", description = "Internal Server Error Response",
+			content = @Content(mediaType = "application/json", schema = @Schema(ref = "ProblemDto")))
+	ResponseEntity<Void> paidOrder(PaidRequestDTO dto) throws JsonProcessingException;
 
 
 }

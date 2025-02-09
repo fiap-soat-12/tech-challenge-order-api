@@ -7,8 +7,11 @@ import br.com.fiap.techchallenge.order.application.usecase.order.dto.CreateOrder
 import br.com.fiap.techchallenge.order.domain.models.*;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.CreateOrderResponseDTO;
+import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.PaidRequestDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.handler.ControllerAdvice;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.mapper.OrderMapper;
+import br.com.fiap.techchallenge.order.infra.gateway.producer.paid.PaidProducer;
+import br.com.fiap.techchallenge.order.infra.gateway.producer.paid.dto.PaidDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,6 +51,9 @@ class OrdersControllerTest {
     @Mock
     private OrderMapper mapper;
 
+    @Mock
+    private PaidProducer paidProducer;
+
     @InjectMocks
     private OrdersController orderController;
 
@@ -57,6 +64,8 @@ class OrdersControllerTest {
     private CreateOrderDTO createOrderDTO;
 
     private CreateOrderResponseDTO createOrderResponseDTO;
+
+    private PaidRequestDTO paidRequestDTO;
 
     @BeforeEach
     void setUp() {
@@ -122,6 +131,18 @@ class OrdersControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    @DisplayName("Should receive paid or not paid orders and send to queue")
+    void shouldReceivePaidOrNotPaidOrdersAndSendToQueue() throws Exception {
+        doNothing().when(paidProducer).sendToPaid(new PaidDTO(paidRequestDTO.orderId(), paidRequestDTO.isPaid()));
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(paidRequestDTO))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
     public static String asJsonString(final Object obj) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -151,9 +172,9 @@ class OrdersControllerTest {
 
     private void buildRequest() {
         CreateOrderDTO.OrderProducts product = new CreateOrderDTO.OrderProducts(UUID.randomUUID(), "mock observation");
-        createOrderDTO = new CreateOrderDTO(UUID.randomUUID(), List.of(product, product)
+        createOrderDTO = new CreateOrderDTO(UUID.randomUUID(), List.of(product, product));
 
-        );
+        paidRequestDTO = new PaidRequestDTO(UUID.randomUUID(), true);
     }
 
     private void buildResponse() {
