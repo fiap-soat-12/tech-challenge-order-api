@@ -141,9 +141,10 @@ class OrdersControllerTest {
     @Test
     @DisplayName("Should receive paid or not paid orders and send to queue")
     void shouldReceivePaidOrNotPaidOrdersAndSendToQueue() throws Exception {
-        doNothing().when(paidProducer).sendToPaid(new PaidDTO(paidRequestDTO.orderId(), paidRequestDTO.isPaid()));
+        var orderId = UUID.randomUUID();
+        doNothing().when(paidProducer).sendToPaid(new PaidDTO(orderId, paidRequestDTO.isPaid()));
 
-        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl)
+        mockMvc.perform(MockMvcRequestBuilders.put("%s/%s".formatted(baseUrl, orderId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(paidRequestDTO))
                         .accept(MediaType.APPLICATION_JSON))
@@ -195,7 +196,7 @@ class OrdersControllerTest {
         CreateOrderDTO.OrderProducts product = new CreateOrderDTO.OrderProducts(UUID.randomUUID(), "mock observation");
         createOrderDTO = new CreateOrderDTO(UUID.randomUUID(), List.of(product, product));
 
-        paidRequestDTO = new PaidRequestDTO(UUID.randomUUID(), true);
+        paidRequestDTO = new PaidRequestDTO( true);
     }
 
     private void buildResponse() {

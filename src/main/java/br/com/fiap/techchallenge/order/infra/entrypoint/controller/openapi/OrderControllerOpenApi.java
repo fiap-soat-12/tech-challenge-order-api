@@ -52,7 +52,7 @@ public interface OrderControllerOpenApi {
 	@ApiResponse(responseCode = "200", description = "OK Response")
 	@ApiResponse(responseCode = "500", description = "Internal Server Error Response",
 			content = @Content(mediaType = "application/json", schema = @Schema(ref = "ProblemDto")))
-	ResponseEntity<Void> paidOrder(PaidRequestDTO dto) throws JsonProcessingException;
+	ResponseEntity<Void> paidOrder(final UUID id, PaidRequestDTO dto) throws JsonProcessingException;
 
 
 }

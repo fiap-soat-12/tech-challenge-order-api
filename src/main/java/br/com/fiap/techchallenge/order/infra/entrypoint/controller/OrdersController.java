@@ -63,9 +63,9 @@ public class OrdersController implements OrderControllerOpenApi {
     }
 
     @Override
-    @PutMapping
-    public ResponseEntity<Void> paidOrder(@RequestBody PaidRequestDTO dto) throws JsonProcessingException {
-        paidProducer.sendToPaid(new PaidDTO(dto.orderId(), dto.isPaid()));
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> paidOrder(@PathVariable("id") final UUID id, @RequestBody PaidRequestDTO dto) throws JsonProcessingException {
+        paidProducer.sendToPaid(new PaidDTO(id, dto.isPaid()));
         return ResponseEntity.ok().build();
     }
 }
