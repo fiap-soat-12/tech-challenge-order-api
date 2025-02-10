@@ -1,9 +1,11 @@
 package br.com.fiap.techchallenge.order.infra.entrypoint.controller;
 
 import br.com.fiap.techchallenge.order.application.usecase.order.CreateOrderUseCase;
+import br.com.fiap.techchallenge.order.application.usecase.order.FindOrderStatusUseCase;
 import br.com.fiap.techchallenge.order.application.usecase.order.IsPaidUseCase;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.CreateOrderRequestDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.CreateOrderResponseDTO;
+import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.OrderStatusResponseDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.PaidRequestDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.mapper.OrderMapper;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.openapi.OrderControllerOpenApi;
@@ -22,15 +24,18 @@ public class OrdersController implements OrderControllerOpenApi {
 
     private final CreateOrderUseCase createOrderUseCase;
     private final IsPaidUseCase isPaidUseCase;
+    private final FindOrderStatusUseCase findOrderStatusUseCase;
     private final PaidProducer paidProducer;
     private final OrderMapper mapper;
 
     public OrdersController(CreateOrderUseCase createOrderUseCase,
                             IsPaidUseCase isPaidUseCase,
+                            FindOrderStatusUseCase findOrderStatusUseCase,
                             PaidProducer paidProducer,
                             OrderMapper mapper) {
         this.createOrderUseCase = createOrderUseCase;
         this.isPaidUseCase = isPaidUseCase;
+        this.findOrderStatusUseCase = findOrderStatusUseCase;
         this.paidProducer = paidProducer;
         this.mapper = mapper;
     }
@@ -41,6 +46,13 @@ public class OrdersController implements OrderControllerOpenApi {
         var order = createOrderUseCase.create(mapper.toCreateOrder(orderRequest));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new CreateOrderResponseDTO(order));
+    }
+
+    @Override
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderStatusResponseDTO> findOrderStatus(@PathVariable("id") final UUID id){
+        var response = findOrderStatusUseCase.findOrderStatus(id);
+        return ResponseEntity.status(HttpStatus.OK).body(new OrderStatusResponseDTO(response));
     }
 
     @Override

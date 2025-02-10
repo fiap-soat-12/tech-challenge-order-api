@@ -53,6 +53,7 @@ public class SpringDocConfigurations {
 		Map<String, Schema> productResponseDto = ModelConverters.getInstance().read(ProductResponseDTO.class);
 		Map<String, Schema> pageResponseDto = ModelConverters.getInstance().read(PageResponseDTO.class);
 		Map<String, Schema> createOrderResponseDto = ModelConverters.getInstance().read(CreateOrderResponseDTO.class);
+		Map<String, Schema> orderStatusResponseDto = ModelConverters.getInstance().read(OrderStatusResponseDTO.class);
 		Map<String, Schema> orderProductsResponseDto = ModelConverters.getInstance()
 				.read(CreateOrderRequestDTO.OrderProducts.class);
 
@@ -66,6 +67,7 @@ public class SpringDocConfigurations {
 		schemaMap.putAll(productResponseDto);
 		schemaMap.putAll(pageResponseDto);
 		schemaMap.putAll(createOrderResponseDto);
+		schemaMap.putAll(orderStatusResponseDto);
 		schemaMap.putAll(orderProductsResponseDto);
 		schemaMap.put("ErrorsValidateDataList", errorsValidateDataArraySchema);
 
