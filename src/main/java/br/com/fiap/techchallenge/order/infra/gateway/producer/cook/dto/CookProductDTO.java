@@ -7,6 +7,6 @@ import java.util.UUID;
 public record CookProductDTO(UUID id,
                              String customization) {
     public CookProductDTO(OrderProduct orderProduct) {
-        this(orderProduct.getId(), orderProduct.getCustomization());
+        this(orderProduct.getProductId(), orderProduct.getCustomization());
     }
 }
