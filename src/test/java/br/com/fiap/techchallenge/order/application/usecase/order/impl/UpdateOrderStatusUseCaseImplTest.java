@@ -8,6 +8,7 @@ import br.com.fiap.techchallenge.order.domain.models.OrderTimestamps;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.cook.CookProducer;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.cook.dto.CookDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ class UpdateOrderStatusUseCaseImplTest {
 
     @Test
     @DisplayName("Should SendToCook if Order Exists And IsPaid")
-    void shouldSendToCookIfOrderExistsAndIsPaid() {
+    void shouldSendToCookIfOrderExistsAndIsPaid() throws JsonProcessingException {
         when(persistence.findById(orderId)).thenReturn(Optional.of(order));
 
         updateOrderStatusUseCase.evolveToPreparing(orderId, true);
@@ -62,7 +63,7 @@ class UpdateOrderStatusUseCaseImplTest {
 
     @Test
     @DisplayName("Should Cancel Order if Exists And IsNotPaid")
-    void shouldCancelOrderIfExistsAndIsNotPaid() {
+    void shouldCancelOrderIfExistsAndIsNotPaid() throws JsonProcessingException {
         when(persistence.findById(orderId)).thenReturn(Optional.of(order));
 
         updateOrderStatusUseCase.evolveToPreparing(orderId, false);

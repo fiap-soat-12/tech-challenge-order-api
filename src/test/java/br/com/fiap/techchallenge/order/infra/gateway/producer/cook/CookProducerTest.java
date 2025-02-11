@@ -5,6 +5,8 @@ import br.com.fiap.techchallenge.order.domain.models.OrderDetails;
 import br.com.fiap.techchallenge.order.domain.models.OrderTimestamps;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.cook.dto.CookDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.UUID;
 
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +30,9 @@ class CookProducerTest {
 
     @Mock
     private SqsTemplate sqsTemplate;
+
+    @Mock
+    private ObjectMapper objectMapper;
 
     @InjectMocks
     private CookProducer cookProducer;
@@ -41,10 +47,11 @@ class CookProducerTest {
 
     @Test
     @DisplayName("Should Send To Cook Queue")
-    void shouldSendToCookQueue() {
+    void shouldSendToCookQueue() throws JsonProcessingException {
         cookProducer.sendToCook(cookDTO);
 
-        verify(sqsTemplate).send("cook-order-create-queue", cookDTO);
+        verify(sqsTemplate).send("cook-order-create-queue", objectMapper.writeValueAsString(cookDTO));
+        verify(objectMapper, times(2)).writeValueAsString(cookDTO);
     }
 
     private void buildArranges(){

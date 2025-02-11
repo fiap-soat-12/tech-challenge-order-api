@@ -2,13 +2,18 @@ package br.com.fiap.techchallenge.order.infra.entrypoint.controller;
 
 import br.com.fiap.techchallenge.order.application.exceptions.DoesNotExistException;
 import br.com.fiap.techchallenge.order.application.usecase.order.CreateOrderUseCase;
+import br.com.fiap.techchallenge.order.application.usecase.order.FindOrderStatusUseCase;
 import br.com.fiap.techchallenge.order.application.usecase.order.IsPaidUseCase;
 import br.com.fiap.techchallenge.order.application.usecase.order.dto.CreateOrderDTO;
 import br.com.fiap.techchallenge.order.domain.models.*;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.CreateOrderResponseDTO;
+import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.OrderStatusResponseDTO;
+import br.com.fiap.techchallenge.order.infra.entrypoint.controller.dto.PaidRequestDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.handler.ControllerAdvice;
 import br.com.fiap.techchallenge.order.infra.entrypoint.controller.mapper.OrderMapper;
+import br.com.fiap.techchallenge.order.infra.gateway.producer.paid.PaidProducer;
+import br.com.fiap.techchallenge.order.infra.gateway.producer.paid.dto.PaidDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +34,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,6 +53,12 @@ class OrdersControllerTest {
     @Mock
     private OrderMapper mapper;
 
+    @Mock
+    private PaidProducer paidProducer;
+
+    @Mock
+    private FindOrderStatusUseCase findOrderStatusUseCase;
+
     @InjectMocks
     private OrdersController orderController;
 
@@ -57,6 +69,10 @@ class OrdersControllerTest {
     private CreateOrderDTO createOrderDTO;
 
     private CreateOrderResponseDTO createOrderResponseDTO;
+
+    private OrderStatusResponseDTO orderStatusResponseDTO;
+
+    private PaidRequestDTO paidRequestDTO;
 
     @BeforeEach
     void setUp() {
@@ -102,7 +118,7 @@ class OrdersControllerTest {
         UUID orderId = UUID.randomUUID();
         when(isPaidUseCase.isOrderPaid(orderId)).thenReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/" + orderId + "/paid-status")
+        mockMvc.perform(MockMvcRequestBuilders.get("%s/%s/paid-status".formatted(baseUrl, orderId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("true")
                         .accept(MediaType.APPLICATION_JSON))
@@ -115,11 +131,38 @@ class OrdersControllerTest {
         UUID orderId = UUID.randomUUID();
         when(isPaidUseCase.isOrderPaid(orderId)).thenReturn(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/" + orderId + "/paid-status")
+        mockMvc.perform(MockMvcRequestBuilders.get("%s/%s/paid-status".formatted(baseUrl, orderId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("false")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Should receive paid or not paid orders and send to queue")
+    void shouldReceivePaidOrNotPaidOrdersAndSendToQueue() throws Exception {
+        var orderId = UUID.randomUUID();
+        doNothing().when(paidProducer).sendToPaid(new PaidDTO(orderId, paidRequestDTO.isPaid()));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("%s/%s".formatted(baseUrl, orderId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(paidRequestDTO))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Should return order status")
+    void shouldReturnOrderStatus() throws Exception {
+        var orderId = UUID.randomUUID();
+        when(findOrderStatusUseCase.findOrderStatus(orderId)).thenReturn(order);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("%s/%s".formatted(baseUrl, orderId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderId").value(orderStatusResponseDTO.orderId().toString()))
+                .andExpect(jsonPath("$.status").value(orderStatusResponseDTO.status().toString()));
     }
 
     public static String asJsonString(final Object obj) {
@@ -151,13 +194,14 @@ class OrdersControllerTest {
 
     private void buildRequest() {
         CreateOrderDTO.OrderProducts product = new CreateOrderDTO.OrderProducts(UUID.randomUUID(), "mock observation");
-        createOrderDTO = new CreateOrderDTO(UUID.randomUUID(), List.of(product, product)
+        createOrderDTO = new CreateOrderDTO(UUID.randomUUID(), List.of(product, product));
 
-        );
+        paidRequestDTO = new PaidRequestDTO( true);
     }
 
     private void buildResponse() {
         createOrderResponseDTO = new CreateOrderResponseDTO(order.getId(), order.getSequence());
+        orderStatusResponseDTO = new OrderStatusResponseDTO(order.getId(), order.getSequence(), order.getStatus());
     }
 
 }

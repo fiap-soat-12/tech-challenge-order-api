@@ -2,7 +2,8 @@ package br.com.fiap.techchallenge.order.infra.entrypoint.consumer;
 
 import br.com.fiap.techchallenge.order.application.usecase.product.DeleteProductByIdUseCase;
 import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.dto.ProductDeleteDTO;
-import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.mapper.ProductMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductDeleteConsumerTest {
@@ -22,10 +22,13 @@ class ProductDeleteConsumerTest {
     @Mock
     private DeleteProductByIdUseCase deleteProductByIdUseCase;
 
+    @Mock
+    private ObjectMapper objectMapper;
+
     @InjectMocks
     private ProductDeleteConsumer productDeleteConsumer;
 
-    private UUID idProduct;
+    private ProductDeleteDTO productDeleteDTO;
 
     @BeforeEach
     void setUp() {
@@ -34,14 +37,19 @@ class ProductDeleteConsumerTest {
 
     @Test
     @DisplayName("Should Call DeleteProductByIdUseCase When Receiving message")
-    void shouldCallDeleteProductByIdUseCaseWhenReceivingMessage() {
-        productDeleteConsumer.receiveMessage(new ProductDeleteDTO(idProduct));
+    void shouldCallDeleteProductByIdUseCaseWhenReceivingMessage() throws JsonProcessingException {
+        when(objectMapper.readValue(productDeleteDTO.toString(), ProductDeleteDTO.class))
+                .thenReturn(productDeleteDTO);
 
-        verify(deleteProductByIdUseCase, times(1)).delete(idProduct);
+        productDeleteConsumer.receiveMessage(productDeleteDTO.toString());
+
+        verify(deleteProductByIdUseCase, times(1)).delete(productDeleteDTO.id());
+        verify(objectMapper, times(1))
+                .readValue(productDeleteDTO.toString(), ProductDeleteDTO.class);
     }
 
     private void buildArranges(){
-        idProduct = UUID.randomUUID();
+        productDeleteDTO = new ProductDeleteDTO(UUID.randomUUID());
     }
 
 }

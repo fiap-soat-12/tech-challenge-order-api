@@ -2,6 +2,8 @@ package br.com.fiap.techchallenge.order.infra.entrypoint.consumer;
 
 import br.com.fiap.techchallenge.order.application.usecase.EvolveOrderUseCase;
 import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.dto.OrderEvolveDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,9 @@ class OrderEvolveConsumerTest {
     @Mock
     private EvolveOrderUseCase evolveOrderUseCase;
 
+    @Mock
+    private ObjectMapper objectMapper;
+
     @InjectMocks
     private OrderEvolveConsumer orderEvolveConsumer;
 
@@ -33,10 +38,12 @@ class OrderEvolveConsumerTest {
 
     @Test
     @DisplayName("Should Call OrderEvolveConsumer When Receiving message")
-    void shouldCallOrderEvolveConsumerWhenReceivingMessage() {
-        orderEvolveConsumer.receiveMessage(evolveDTO);
+    void shouldCallOrderEvolveConsumerWhenReceivingMessage() throws JsonProcessingException {
+        orderEvolveConsumer.receiveMessage(evolveDTO.toString());
 
-        verify(evolveOrderUseCase, times(1)).evolveOrder(evolveDTO);
+        verify(evolveOrderUseCase, times(1))
+                .evolveOrder(objectMapper.readValue(evolveDTO.toString(), OrderEvolveDTO.class));
+        verify(objectMapper, times(2)).readValue(evolveDTO.toString(), OrderEvolveDTO.class);
     }
 
     private void buildArranges(){

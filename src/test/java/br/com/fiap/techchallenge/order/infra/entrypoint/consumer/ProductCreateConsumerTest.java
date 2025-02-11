@@ -6,6 +6,8 @@ import br.com.fiap.techchallenge.order.domain.models.enums.ProductCategoryEnum;
 import br.com.fiap.techchallenge.order.domain.models.enums.ProductStatusEnum;
 import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.dto.ProductCreateDTO;
 import br.com.fiap.techchallenge.order.infra.entrypoint.consumer.mapper.ProductMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,10 @@ class ProductCreateConsumerTest {
     @Mock
     private ProductMapper mapper;
 
+
+    @Mock
+    private ObjectMapper objectMapper;
+
     @InjectMocks
     private ProductCreateConsumer productCreateConsumer;
 
@@ -43,13 +49,14 @@ class ProductCreateConsumerTest {
 
     @Test
     @DisplayName("Should Call CreateProductUseCase When Receiving message")
-    void shouldCallCreateProductUseCaseWhenReceivingMessage() {
-        when(mapper.toProduct(productCreateDTO)).thenReturn(product);
+    void shouldCallCreateProductUseCaseWhenReceivingMessage() throws JsonProcessingException {
+        when(mapper.toProduct(objectMapper.readValue(productCreateDTO.toString(), ProductCreateDTO.class))).thenReturn(product);
 
-        productCreateConsumer.receiveMessage(productCreateDTO);
+        productCreateConsumer.receiveMessage(productCreateDTO.toString());
 
-        verify(mapper, times(1)).toProduct(productCreateDTO);
+        verify(mapper, times(1)).toProduct(objectMapper.readValue(productCreateDTO.toString(), ProductCreateDTO.class));
         verify(createProductUseCase, times(1)).create(product);
+        verify(objectMapper, times(3)).readValue(productCreateDTO.toString(), ProductCreateDTO.class);
     }
 
     private void buildArranges(){

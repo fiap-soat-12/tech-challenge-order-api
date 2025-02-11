@@ -12,6 +12,7 @@ import br.com.fiap.techchallenge.order.domain.models.OrderProduct;
 import br.com.fiap.techchallenge.order.domain.models.Product;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.payment.PaymentProducer;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.payment.dto.PaymentDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -39,7 +40,7 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
     }
 
 	@Override
-	public Order create(CreateOrderDTO input) {
+	public Order create(CreateOrderDTO input) throws JsonProcessingException {
 		Customer customer = null;
 
 		if (input.customerId() != null) {

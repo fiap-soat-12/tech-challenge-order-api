@@ -9,6 +9,7 @@ import br.com.fiap.techchallenge.order.domain.models.OrderTimestamps;
 import br.com.fiap.techchallenge.order.domain.models.enums.OrderStatusEnum;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.cook.CookProducer;
 import br.com.fiap.techchallenge.order.infra.gateway.producer.cook.dto.CookDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -30,7 +31,7 @@ public class UpdateOrderStatusUseCaseImpl implements UpdateOrderStatusUseCase {
     }
 
 	@Override
-	public void evolveToPreparing(UUID orderId, Boolean isPaid) {
+	public void evolveToPreparing(UUID orderId, Boolean isPaid) throws JsonProcessingException {
 		var found = persistence.findById(orderId)
 			.orElseThrow(() -> new DoesNotExistException("Order does no exist!"));
 
@@ -43,7 +44,7 @@ public class UpdateOrderStatusUseCaseImpl implements UpdateOrderStatusUseCase {
 		persistence.update(found);
 	}
 
-	private void sendToCook(Order order, Boolean isPaid){
+	private void sendToCook(Order order, Boolean isPaid) throws JsonProcessingException {
 		order.prepareOrder(isPaid);
 		cookProducer.sendToCook(new CookDTO(order));
 	}
