@@ -19,6 +19,6 @@ COPY --from=layers /layer/application/ ./
 RUN chown -R appuser:appuser /opt/app
 USER appuser
 
-EXPOSE 8100
+EXPOSE 8357
 
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
