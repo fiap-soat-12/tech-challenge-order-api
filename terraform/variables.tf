@@ -92,8 +92,3 @@ variable "order_product_update_queue" {
   description = "Order product update SQS Queue"
 }
 
-
-
-
-
-
