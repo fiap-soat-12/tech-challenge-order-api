@@ -12,19 +12,19 @@ variable "eks_cluster_name" {
 
 # variable "ecr_repository_name" {
 #     type = string
-#     default = "tech-challenge-cook-api"
+#     default = "tech-challenge-order-api"
 #     description = "AWS ECR repository name"
 # }
 
 variable "server_port" {
   type        = number
-  default     = 9100
-  description = "Cook App server port"
+  default     = 8357
+  description = "Order App server port"
 }
 
 variable "rds_instance_name" {
   type        = string
-  default     = "tc_cook_db"
+  default     = "tc_order_db"
   description = "Rds instance name"
 }
 
@@ -45,7 +45,7 @@ variable "AWS_SESSION_TOKEN" {
 
 variable "secret_name" {
   type        = string
-  default     = "tech-challenge-cook-db-credentials"
+  default     = "tech-challenge-order-db-credentials"
   description = "secret_name"
 }
 

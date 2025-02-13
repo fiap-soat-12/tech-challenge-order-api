@@ -40,7 +40,7 @@ data "aws_sqs_queue" "order_product_update_queue" {
 }
 
 data "aws_ssm_parameter" "db_url" {
-  name = "/fiap-tech-challenge/cook-rds-endpoint"
+  name = "/fiap-tech-challenge/order-rds-endpoint"
 }
 
 data "aws_secretsmanager_secret_version" "db_credentials" {
