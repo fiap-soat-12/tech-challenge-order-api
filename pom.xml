@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.fiap.techchallenge</groupId>
-	<artifactId>order</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>order</name>
+	<artifactId>tech-challenge-order-api</artifactId>
+	<version>1.0.0</version>
+	<name>tech-challenge-order-api</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
