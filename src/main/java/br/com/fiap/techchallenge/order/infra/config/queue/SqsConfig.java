@@ -12,15 +12,15 @@ import java.net.URI;
 @Configuration
 public class SqsConfig {
 
-    @Value("${sqs.queue.url}")
+    @Value("${sqs.queue.url:default}")
     private String urlSqs;
 
     @Bean
     public SqsAsyncClient sqsAsyncClient() {
         return SqsAsyncClient.builder()
-                .endpointOverride(URI.create(urlSqs))
+                // .endpointOverride(URI.create(urlSqs))
                 .region(Region.US_EAST_1)
-                .credentialsProvider(DefaultCredentialsProvider.create())
+                // .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
     }
 }
