@@ -51,8 +51,7 @@ resource "kubernetes_deployment" "order_deployment" {
 
       spec {
         container {
-          # image             = data.aws_ecr_image.latest_image.image_uri
-          image             = "willosouza/tech-challenge-order-api:latest"
+          image             = data.aws_ecr_image.latest_image.image_uri
           name              = "tech-challenge-order-api"
           image_pull_policy = "Always"
 
