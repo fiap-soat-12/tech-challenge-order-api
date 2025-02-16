@@ -10,11 +10,11 @@ variable "eks_cluster_name" {
   description = "EKS Cluster name"
 }
 
-# variable "ecr_repository_name" {
-#     type = string
-#     default = "tech-challenge-order-api"
-#     description = "AWS ECR repository name"
-# }
+variable "ecr_repository_name" {
+  type        = string
+  default     = "tech-challenge-order-api"
+  description = "AWS ECR repository name"
+}
 
 variable "server_port" {
   type        = number
