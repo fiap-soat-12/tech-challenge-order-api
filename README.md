@@ -10,7 +10,7 @@
 
 ## 💻 Descrição
 
-O **Tech Challenge - Order API** é um microserviço desenvolvido em **Java** com **Spring Boot**, seguindo os princípios da **Clean Architecture**. Ele é responsável por gerenciar os endpoints de **comunicação com o gateway de pagamento externo** do restaurante e **consulta do QR do pedido** para o pagamento.
+O **Tech Challenge - Order API** é um microserviço desenvolvido em **Java** com **Spring Boot**, seguindo os princípios da **Clean Architecture**. Ele é responsável por gerenciar os endpoints de **Criação e Identificação do Cliente** do restaurante e **Criação dos Pedidos**.
 
 ## 🛠 Tecnologias Utilizadas
 
@@ -57,7 +57,7 @@ O projeto adota a **Clean Architecture**, garantindo flexibilidade, testabilidad
 docker compose up
 ```
 
-3. O serviço estará disponível em `http://localhost:8100/payment`
+3. O serviço estará disponível em `http://localhost:8357/order`
 
 ### Subindo a Order API
   Caso deseje subir a Order API, basta seguir os seguintes passos:
@@ -86,14 +86,20 @@ http://localhost:8357/order/swagger-ui/index.html
 
 ## 🔃 Fluxo de Execução das APIs
 
-1. Busca do **QR** do pedido (GET) `/payment/v1/qrs/{orderId}`
-2. **WebHook** de pagamento (POST) `/payment/v1/webhook-payment`
+1. Criação do **Cliente** (POST) `/order/v1/customers`
+2. Busca do **Cliente** pelo CNPJ (GET) `/order/v1/customers/{document}`
+3. Busca dos **Produtos** (GET) `/order/v1/products`
+4. Criação do **Pedido** (POST) `/order/v1/orders`
+5. Busca do **Pedido** pelo status (GET) `/order/v1/orders/{id}`
+6. Busca do **Pedido** pelo status do pagamento (GET) `/order/v1/orders/{id}/paid-status`
+7. Atualizar status de pagamento do **Pedido** (PUT) `/order/v1/orders/{id}`
+
 
 ## 🎲 Seeds
 
 Este projeto utiliza **seeds** para pré-popular o banco de dados. O **Flyway** gerencia essas migrações automaticamente ao iniciar a aplicação e para configurar as filas de forma local usando o localstack foi utilizado um arquivo bash.
 ```bash
-.bash/create_setup.sh
+.bash/create_queues.sh
 ```
 
 ## 📚 Event Storming
