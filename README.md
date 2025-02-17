@@ -86,6 +86,15 @@ A documentação da API pode ser acessada através do Swagger:
 http://localhost:8357/order/swagger-ui/index.html
 ```
 
+## ✅ Cobertura de Testes
+
+### Testes Unitarios
+![unit-test](./assets/unit_test_order.png)
+
+### Scan do Sonar
+![Sonar_1](./assets/sonar_order_1.png)
+![Sonar_1](./assets/sonar_order_2.png)
+
 ## 🔃 Fluxo de Execução das APIs
 
 1. Criação do **Cliente** (POST) `/order/v1/customers`
