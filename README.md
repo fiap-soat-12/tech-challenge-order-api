@@ -104,16 +104,6 @@ http://localhost:8357/order/swagger-ui/index.html
 5. Busca do **Pedido** pelo status (GET) `/order/v1/orders/{id}`
 6. Busca do **Pedido** pelo status do pagamento (GET) `/order/v1/orders/{id}/paid-status`
 
-
-## 🎲 Seeds
-
-Este projeto utiliza **seeds** para pré-popular o banco de dados. 
-O **Flyway** gerencia essas migrações automaticamente ao iniciar a aplicação.
-Para configurar as filas de forma local usando o serviço localstack foi utilizado um arquivo bash.
-```bash
-.bash/create_queues.sh
-```
-
 ## 📚 Event Storming
 
 ![Event Storming](./assets/event_storming.png)
