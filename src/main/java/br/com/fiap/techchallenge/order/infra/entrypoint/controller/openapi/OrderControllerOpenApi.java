@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.Hidden;
 
 import java.util.UUID;
 
@@ -48,10 +49,7 @@ public interface OrderControllerOpenApi {
 			content = @Content(mediaType = "application/json", schema = @Schema(ref = "ProblemDto")))
 	ResponseEntity<OrderStatusResponseDTO> findOrderStatus(final UUID id);
 
-	@Operation(summary = "Evolve Order to Paid or Not Paid")
-	@ApiResponse(responseCode = "200", description = "OK Response")
-	@ApiResponse(responseCode = "500", description = "Internal Server Error Response",
-			content = @Content(mediaType = "application/json", schema = @Schema(ref = "ProblemDto")))
+	@Hidden
 	ResponseEntity<Void> paidOrder(final UUID id, PaidRequestDTO dto) throws JsonProcessingException;
 
 
