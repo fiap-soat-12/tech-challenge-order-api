@@ -16,6 +16,8 @@ O **Tech Challenge - Order API** é um microserviço desenvolvido em **Java** co
 
 ![Java](https://img.shields.io/badge/java_21-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring_3-%236DB33F.svg?style=for-the-badge&logo=springboot&logoColor=white)
+![JUnit5](https://img.shields.io/badge/JUnit5-25A162.svg?style=for-the-badge&logo=JUnit5&logoColor=white)
+![Mockito](https://img.shields.io/badge/Mockito-53AC56.svg?style=for-the-badge&logo=Minetest&logoColor=white)
 ![Maven](https://img.shields.io/badge/Apache%20Maven-C71A36.svg?style=for-the-badge&logo=Apache-Maven&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
@@ -97,7 +99,9 @@ http://localhost:8357/order/swagger-ui/index.html
 
 ## 🎲 Seeds
 
-Este projeto utiliza **seeds** para pré-popular o banco de dados. O **Flyway** gerencia essas migrações automaticamente ao iniciar a aplicação e para configurar as filas de forma local usando o localstack foi utilizado um arquivo bash.
+Este projeto utiliza **seeds** para pré-popular o banco de dados. 
+O **Flyway** gerencia essas migrações automaticamente ao iniciar a aplicação.
+Para configurar as filas de forma local usando o serviço localstack foi utilizado um arquivo bash.
 ```bash
 .bash/create_queues.sh
 ```
