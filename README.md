@@ -94,7 +94,6 @@ http://localhost:8357/order/swagger-ui/index.html
 4. Criação do **Pedido** (POST) `/order/v1/orders`
 5. Busca do **Pedido** pelo status (GET) `/order/v1/orders/{id}`
 6. Busca do **Pedido** pelo status do pagamento (GET) `/order/v1/orders/{id}/paid-status`
-7. Atualizar status de pagamento do **Pedido** (PUT) `/order/v1/orders/{id}`
 
 
 ## 🎲 Seeds
